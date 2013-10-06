@@ -9,21 +9,48 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.all_ratings
     ratings = params[:ratings]
-    if ratings != nil
+    if ratings != nil 
+      if ratings.empty?
+        ratings = session[:ratings]
+        if ratings != nil
+          ratings = ratings.keys
+          @movies = Movie.where(:rating=> ratings).all
+        end
+      else
+      session[:ratings] =ratings
       ratings = ratings.keys
       @movies = Movie.where(:rating => ratings).all
-      return
+      end
+    else
+      ratings = session[:ratings]
+      if ratings != nil
+        ratings = ratings.keys
+        @movies = Movie.where(:rating => ratings).all
+
+      else
+        @movies = Movie.all
+      end
     end
 
     sort_by = params[:sort_by]
     if sort_by == nil
-      @movies = Movie.all
-    elsif sort_by == 'title'
-      @movies = Movie.find(:all, :order => 'title' )
-      @cond_hilite1 ='hilite'
-    elsif sort_by == 'date'
-      @movies = Movie.find(:all, :order => 'release_date')
-      @cond_hilite2 = 'hilite'
+      sort_by = session[:sort_by]
+    end
+
+    if sort_by != nil
+      if sort_by == 'title'
+        #@movies = Movie.find(:all, :order => 'title' )
+        #@movies = Movie.all
+        @movies = @movies.sort_by {|m| m.title}
+        @cond_hilite1 ='hilite'
+        session[:sort_by] = sort_by
+      elsif sort_by == 'date'
+        #@movies = Movie.find(:all, :order => 'release_date')
+        @movies = @movies.sort_by {|m| m.release_date}
+        @cond_hilite2 = 'hilite'
+        session[:sort_by] = sort_by
+      end
+
     end
 
 

@@ -9,32 +9,41 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.all_ratings
     ratings = params[:ratings]
-    if ratings != nil 
-      if ratings.empty?
-        ratings = session[:ratings]
-        if ratings != nil
-          ratings = ratings.keys
-          @movies = Movie.where(:rating=> ratings).all
-        end
-      else
-      session[:ratings] =ratings
-      ratings = ratings.keys
-      @movies = Movie.where(:rating => ratings).all
+    sort_by = params[:sort_by]
+    if ratings == nil and sort_by == nil
+      ratings = session[:ratings]
+      sort_by = session[:sort_by]
+      if ratings != nil and sort_by !=nil
+        redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
+        return
       end
-    else
+    elsif ratings == nil
       ratings = session[:ratings]
       if ratings != nil
-        ratings = ratings.keys
-        @movies = Movie.where(:rating => ratings).all
-
-      else
-        @movies = Movie.all
+        redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
+        return
+      end
+    elsif ratings.empty?
+      ratings = session[:ratings]
+      if ratings !=nil
+        redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
+        return
+      end
+    elsif sort_by == nil
+      sort_by = session[:sort_by]
+      if sort_by !=nil
+        redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
+        return
       end
     end
 
-    sort_by = params[:sort_by]
-    if sort_by == nil
-      sort_by = session[:sort_by]
+
+    if ratings != nil 
+      session[:ratings] =ratings
+      ratings = ratings.keys
+      @movies = Movie.where(:rating => ratings).all
+    else
+      @movies = Movie.all
     end
 
     if sort_by != nil

@@ -17,7 +17,16 @@ class MoviesController < ApplicationController
         flash.keep
         redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
         return
+      elsif ratings != nil
+        flash.keep
+        redirect_to movies_path({:ratings => ratings})
+        return
+      elsif sort_by != nil
+        flash.keep
+        redirect_to movies_path({:sort_by => sort_by}}
+        return
       end
+
     elsif ratings == nil
       ratings = session[:ratings]
       if ratings != nil

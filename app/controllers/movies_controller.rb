@@ -23,7 +23,7 @@ class MoviesController < ApplicationController
         return
       elsif sort_by != nil
         flash.keep
-        redirect_to movies_path({:sort_by => sort_by}}
+        redirect_to movies_path({:sort_by => sort_by})
         return
       end
 

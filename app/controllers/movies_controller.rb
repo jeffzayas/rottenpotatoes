@@ -14,24 +14,28 @@ class MoviesController < ApplicationController
       ratings = session[:ratings]
       sort_by = session[:sort_by]
       if ratings != nil and sort_by !=nil
+        flash.keep
         redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
         return
       end
     elsif ratings == nil
       ratings = session[:ratings]
       if ratings != nil
+        flash.keep
         redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
         return
       end
     elsif ratings.empty?
       ratings = session[:ratings]
       if ratings !=nil
+        flash.keep
         redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
         return
       end
     elsif sort_by == nil
       sort_by = session[:sort_by]
       if sort_by !=nil
+        flash.keep
         redirect_to movies_path({:ratings => ratings, :sort_by => sort_by})
         return
       end
